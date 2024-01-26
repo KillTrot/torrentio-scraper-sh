@@ -61,7 +61,10 @@ function search(keyword, config = {}, retries = 2) {
       .catch((err) => search(keyword, config, retries - 1));
 }
 
-function browse(config = {}, retries = 2) {
+function browse(config = {}, retries = 2, lastErr) {
+  if (retries < 2) {
+    config.log("Last error returned for the query: %s", lastErr);
+  }
   if (retries === 0) {
     return Promise.reject(new Error(`Failed browse request`));
   }
@@ -76,7 +79,7 @@ function browse(config = {}, retries = 2) {
   return Promises.first(proxyList
           .map((proxyUrl) => singleRequest(requestUrl(proxyUrl), config)))
       .then((body) => parseTableBody(body))
-      .catch((err) => browse(config, retries - 1));
+      .catch((err) => browse(config, retries - 1, err));
 }
 
 function singleRequest(requestUrl, config = {}) {
