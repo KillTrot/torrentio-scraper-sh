@@ -63,7 +63,7 @@ function search(keyword, config = {}, retries = 2) {
 
 function browse(config = {}, retries = 2, lastErr) {
   if (retries < 2) {
-    config.log("Last error returned for the query: %s", lastErr);
+    console.log("Last error returned for the query: %s", lastErr);
   }
   if (retries === 0) {
     return Promise.reject(new Error(`Failed browse request`));
